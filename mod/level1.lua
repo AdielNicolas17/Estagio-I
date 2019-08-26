@@ -174,8 +174,8 @@ local function createBoss()
 end
 
 
-createBoss()
-
+criarLobo = timer.performWithDelay(3000 , createBoss , -10)
+--physics.setDrawMode("hybrid")
 
 
 ----------- Listener setup---------------------------------------
@@ -240,6 +240,7 @@ local function onCollision( event )
         	
             display.remove( obj1 )
             display.remove( obj2 )
+            
 
 
                     score = score + 100

@@ -107,7 +107,11 @@ local function moveNinja( event )
 
 	return true 
 end
-
+local tt1 = display.newRect(250,500,250,500)
+tt1.x = 125
+tt1.y = 200
+--tt.isVisible=false
+tt1:toBack()
 running:addEventListener( "touch", moveNinja )
 
 --mecanica de atirar
@@ -125,7 +129,12 @@ local function fireLaser()
            onComplete = function() display.remove( newLaser ) end
     } )
 end
-running:addEventListener( "tap", fireLaser )
+local tt = display.newRect(250,500,250,500)
+tt.x = 360
+tt.y = 200
+--tt.isVisible=false
+tt:toBack()
+tt:addEventListener( "tap", fireLaser )
 
 -- restaurar ninja 
 local function restoreNinja()
@@ -268,7 +277,15 @@ Runtime:addEventListener( "collision", onCollision )
 
 
 -----------limites da tela de jogo------------------------
+local limite = display.newImage("lm.png")
+limite.x = 230
+limite.y = -30
+physics.addBody(limite , "static",{density=.1, bounce=0.1, friction=.2})
 
+local limite1 = display.newImage("lm.png")
+limite1.x = 230
+limite1.y = 320
+physics.addBody(limite1 , "static" ,{density=.1, bounce=0.1, friction=.2})
 
 ------------------------------------------------------------------------------------
 function gameOver()

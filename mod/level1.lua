@@ -92,12 +92,12 @@ local function moveNinja( event )
 
 		display.currentStage:setFocus( running )
 		
-		--running.touchOffsetX = event.x - running.x
+		running.touchOffsetX = event.x - running.x
 		running.touchOffsetY = event.y - running.y
 
 	elseif ( "moved" == phase ) then
 		
-		--running.x = event.x - running.touchOffsetX
+		running.x = event.x - running.touchOffsetX
 		running.y = event.y - running.touchOffsetY
 
 	elseif ( "ended" == phase or "cancelled" == phase ) then
@@ -184,7 +184,7 @@ end
 
 
 criarLobo = timer.performWithDelay(3000 , createBoss , -10)
---physics.setDrawMode("hybrid")
+physics.setDrawMode("hybrid")
 
 
 ----------- Listener setup---------------------------------------
@@ -197,35 +197,35 @@ scene:addEventListener( "destroy", scene )
 ---------esplosoes 	------------------------------------------------------------
 
 
-function explode()
-    local  sheetOptions11 = {width =24 , height = 23, numFrames = 7}
+function morrer()
+    local  sheetOptions11 = {width =116 , height = 40, numFrames = 1}
 
-    local explode = graphics.newImageSheet("explosion.png" , sheetOptions11)
+    local morrer = graphics.newImageSheet("morte.png" , sheetOptions11)
 
     local sequences ={
     {
         name = "normalRun",
         start = 1,
-        count = 7,
+        count = 1,
         time = 480,
         loopCount = 0,
         loopDirection = "forward" 
     }
 }
 
-    local explosao = display.newSprite(mainGroup, explode , sequences)
-    physics.addBody(explosao ,"dynamic", {isSensor = true})
-    explosao.x = running.x
-    explosao.y = running.y
-    explosao.xScale = 0.8
-    explosao.yScale = 1.2
-    explosao:toBack()
---    explosao.isVisible = false
-    explosao.myName ="explosao"
+    local morto = display.newSprite(mainGroup, morrer , sequences)
+    physics.addBody(morto ,"dynamic", {isSensor = true})
+    morto.x = running.x
+    morto.y = running.y
+    morto.xScale = 0.8
+    morto.yScale = 1.2
+    morto:toBack()
+--    morto.isVisible = false
+    morto.myName ="morto"
 
 	
-	explosao.isVisible = true
-	explosao:play()
+	morto.isVisible = true
+	morto:play()
 	timer.performWithDelay(3000, gameOver, 1)
 	
 	--running1.isVisible = false
@@ -264,7 +264,7 @@ local function onCollision( event )
                 livesText.text = "Lives: " .. lives
                 if ( lives == 0 ) then
                     display.remove( running )
-                    explode()
+                    morrer()
                 else
                     running.alpha = 0
                     timer.performWithDelay( 1000, restoreNinja )

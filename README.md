@@ -1,7 +1,7 @@
 <h1>The Fearless</h1>
 
 <h2>Gênero:</h2>  
-   - Ação
+   - Ação/terro/comedia
 
 
 <h2>Público Alvo:</h2>

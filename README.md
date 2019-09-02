@@ -8,8 +8,8 @@ Objetivo especifico:
 	
 Enredo e Personagens:
 	Em uma era apocalíptica um destemido ninja resolve lutar contra os terríveis monstros que desejam destruir a humanidade. Conhecendo as limitações de sua espada Edu Ishikawa resolve enfrentar seus inimigos usando um fuzil.
-•	Personagem Principal: Edu Ishikawa, ninja destemido 
-•	Inimigos: Zama (Besta demoníaca), Lehan (Lobisomem) 
+	•Personagem Principal: Edu Ishikawa, ninja destemido 
+	•Inimigos: Zama (Besta demoníaca), Lehan (Lobisomem) 
 
 Iteração do jogador:
 	O jogador poderá movimentar o ninja Edu para cima e para baixo em uma perspectiva 3D e atirar 
@@ -19,5 +19,5 @@ Controles:
  
 Regras de jogo e sistema de pontuação:
 	O jogador iniciara com um total de 3 vidas e 0 scores, ao encostar em um dos inimigos será perdido uma vida, ao acertar um tiro no inimigo será acrescido 10 pts. ao score.
-•	Vidas: inicia com 3. Ao zerar o contador de vidas o jogo é finalizado
-•	Pontuação: Inicia com 0.  A cada inimigo destruído soma ao total de score 10pts.
+	•Vidas: inicia com 3. Ao zerar o contador de vidas o jogo é finalizado
+	•Pontuação: Inicia com 0.  A cada inimigo destruído soma ao total de score 10pts.

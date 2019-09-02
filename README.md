@@ -12,6 +12,7 @@
      - The Fearless é uma mistura de ação terror e comedia, o objetivo do jogo é controlar o ninja Edu para desviar e destruir os inimigos que ameaçam a vida na terra.
 
 <h2>Objetivo especifico:</h2>
+  - Enfrentar os inimigos que aparecem em seu caminho afim de obter a maior pontução possivel.
 	
 <h2>Enredo e Personagens:</h2>
 

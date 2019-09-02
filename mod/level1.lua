@@ -7,7 +7,7 @@ local scene = composer.newScene()
 local physics = require "physics"
 physics.start()
 physics.setGravity( 0, 0 )
-
+--physics.setDrawMode("hybrid")
 
 ----------configuraçao dos grupos----------------------
 local backGroup = display.newGroup()  
@@ -173,18 +173,29 @@ local function createBoss()
 }
     local lobo = display.newSprite(mainGroup,sheet1 , sequences)
     physics.addBody(lobo,"dynamic" , {radius=30})
+    lobo.speed = 1
     lobo.x = display.contentWidth
     lobo.y = math.random(120,250)
     lobo.xScale = 0.8
     lobo.yScale = 1.2
     lobo:play()
-    lobo.myName ="lobo"
-     
+    lobo.myName ="lobo"    
+
+    local function moveInimigos()
+        print (lobo.x)
+       -- if (lobo.x > 10) then
+       if(lobo.x ~= nil)then
+        lobo.x = lobo.x - lobo.speed
+        end
+    end
+
+    lobo.enterFrame = moveInimigos
+    Runtime:addEventListener("enterFrame", lobo)
 end
 
 
 criarLobo = timer.performWithDelay(3000 , createBoss , -10)
-physics.setDrawMode("hybrid")
+
 
 
 ----------- Listener setup---------------------------------------
@@ -292,6 +303,5 @@ function gameOver()
    storyboard.gotoScene("menu", "fade", 400)
 end
 
---running1.enterFrame = moveInimigos
---Runtime:addEventListener("enterFrame", running1)
+
 return scene

@@ -53,7 +53,7 @@ function scene:create( event )
 	sceneGroup:insert( background )
 	--sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
-	--musicTrack = audio.loadStream( "audio/Escape_Looping.wav" )
+	musicTrack = audio.loadStream( "audio/Eyes_of_Glory.wav" )
 end
 
 function scene:show( event )

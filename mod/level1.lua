@@ -182,8 +182,8 @@ local function createBoss()
     lobo.myName ="lobo"    
 
     local function moveInimigos()
-        print (lobo.x)
-       -- if (lobo.x > 10) then
+--        print (lobo.x)
+       
        if(lobo.x ~= nil)then
         lobo.x = lobo.x - lobo.speed
         end

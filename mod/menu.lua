@@ -23,35 +23,28 @@ local function onPlayBtnRelease()
 	
 	return true	-- indicates successful touch
 end
+local function gotoScores()
+	composer.gotoScene( "scores", { time=800, effect="crossFade" } )
+end
 
 function scene:create( event )
 	local sceneGroup = self.view
 
-	-- Called when the scene's view does not exist.
-	-- 
-	-- INSERT code here to initialize the scene
-	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
-	-- display a background image
 	local background = display.newImageRect( "background.jpg", display.actualContentWidth, display.actualContentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x = 0 + display.screenOriginX 
 	background.y = 0 + display.screenOriginY
 	
-	-- create/position logo/title image on upper-half of the screen
-	--local titleLogo = display.newImageRect( "logo.png", 264, 42 )
-	--titleLogo.x = display.contentCenterX
-	--titleLogo.y = 250
-	
-	-- create a widget button (which will loads level1.lua on release)
+
 	playBtn = widget.newButton{
 		label="Start",
 		--labelColor = { default={200}, over={128} },
 		default="button.png",
 		over="button-over.png",
 		width=50, height=30,
-		onRelease = onPlayBtnRelease	-- event listener function
+		onRelease = onPlayBtnRelease	
 	}
 	playBtn.x = display.contentCenterX
 	playBtn.y = display.contentHeight - 68
@@ -60,6 +53,7 @@ function scene:create( event )
 	sceneGroup:insert( background )
 	--sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
+	--musicTrack = audio.loadStream( "audio/Escape_Looping.wav" )
 end
 
 function scene:show( event )

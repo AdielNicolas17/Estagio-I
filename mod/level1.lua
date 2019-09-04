@@ -7,7 +7,7 @@ local scene = composer.newScene()
 local physics = require "physics"
 physics.start()
 physics.setGravity( 0, 0 )
-physics.setDrawMode("hybrid")
+--physics.setDrawMode("hybrid")
 
 ----------configuraçao dos grupos----------------------
 local backGroup = display.newGroup()  
@@ -26,7 +26,7 @@ local ninja
 local gameLoopTimer
 local livesText
 local scoreText
-
+local soundShot =  audio.loadStream( "audio/fire.wav" )
 
 --
 
@@ -117,8 +117,8 @@ running:addEventListener( "touch", moveNinja )
 --mecanica de atirar
 
 local function fireLaser()
- 
-    local newLaser = display.newImageRect(mainGroup, "tiro.png", 14, 14)
+    audio.play( soundShot )
+    local newLaser = display.newImageRect(mainGroup, "tiro.png", 8, 4)
     physics.addBody( newLaser, "dynamic", { isSensor=true } )
     newLaser.isBullet = true
     newLaser.myName = "laser"
@@ -128,6 +128,7 @@ local function fireLaser()
     transition.to( newLaser, { x=1140, time=1000,
            onComplete = function() display.remove( newLaser ) end
     } )
+
 end
 local tt = display.newRect(250,500,250,500)
 tt.x = 360
@@ -265,7 +266,7 @@ local function onCollision( event )
             
 
 
-                    score = score + 100
+                    score = score + 10
             scoreText.text = "Score: " .. score
 
         elseif ( ( obj1.myName == "running" and obj2.myName == "lobo" ) or

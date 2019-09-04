@@ -7,7 +7,7 @@ local scene = composer.newScene()
 local physics = require "physics"
 physics.start()
 physics.setGravity( 0, 0 )
---physics.setDrawMode("hybrid")
+physics.setDrawMode("hybrid")
 
 ----------configuraçao dos grupos----------------------
 local backGroup = display.newGroup()  
@@ -37,12 +37,13 @@ display.setDefault("textureWrapX","mirroredRepeat")
 
 local background = display.newRect( backGroup, display.contentCenterX , display.contentCenterY , 480 , 320)
 background.fill={type = "image" , filename = "back11.png"}
+
 local function animateBackground()
-	transition.to(background.fill ,{ time = 5000,x=1 ,delta = true,onComplete = animateBackground})
+
+        transition.to(background.fill ,{ time = 5000,x=1 ,delta = true, onComplete = animateBackground})
+
 end
-
 animateBackground()
-
 
 -----------pontuação e vidas------------------------------
 
@@ -74,8 +75,8 @@ local sequences ={
 }
 
 local running = display.newSprite(mainGroup,sheet , sequences)
-physics.addBody(running,"dynamic" , {radius=50})
-running.x = display.contentWidth / 4 + 40
+physics.addBody(running,"dynamic" , {radius=25})
+running.x = display.contentWidth - 400
 running.y = 200
 running.xScale = 0.8
 running.yScale = 1.2
@@ -88,8 +89,7 @@ local function moveNinja( event )
 	local running = event.target
 	local phase = event.phase
 
-	if ( "began" == phase ) then
-
+    if ( "began" == phase ) then
 		display.currentStage:setFocus( running )
 		
 		running.touchOffsetX = event.x - running.x
@@ -158,6 +158,7 @@ end
 
 -- criando inimigos
 local function createBoss()
+    
     local  sheetOptions2 = {width =93.5 , height = 84, numFrames = 6}
     local sheet1 = graphics.newImageSheet("lobo.png" , sheetOptions2)
 
@@ -209,6 +210,7 @@ scene:addEventListener( "destroy", scene )
 
 
 function morrer()
+    transition.cancel( )
     local  sheetOptions11 = {width =116 , height = 40, numFrames = 1}
 
     local morrer = graphics.newImageSheet("morte.png" , sheetOptions11)
@@ -276,9 +278,11 @@ local function onCollision( event )
                 if ( lives == 0 ) then
                     display.remove( running )
                     morrer()
+                    timer.performWithDelay( 200, endGame )
                 else
                     running.alpha = 0
                     timer.performWithDelay( 1000, restoreNinja )
+                   
                 end
             end          
         end
@@ -298,7 +302,11 @@ limite1.x = 230
 limite1.y = 320
 physics.addBody(limite1 , "static" ,{density=.1, bounce=0.1, friction=.2})
 
-------------------------------------------------------------------------------------
+--------------------------fim de jogo--------------------------
+local function endGame()
+	composer.setVariable( "finalScore", score )
+	composer.gotoScene( "scores", { time=800, effect="crossFade" } )
+end
 function gameOver()
    storyboard.gotoScene("menu", "fade", 400)
 end

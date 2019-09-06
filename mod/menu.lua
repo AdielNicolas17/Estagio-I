@@ -53,7 +53,7 @@ function scene:create( event )
 	sceneGroup:insert( background )
 	--sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
-	musicTrack = audio.loadStream( "audio/Eyes_of_Glory.wav" )
+	musicTrack = audio.loadStream( "audio/start.mp3" )
 end
 
 function scene:show( event )
@@ -100,6 +100,7 @@ function scene:destroy( event )
 end
 
 ---------------------------------------------------------------------------------
+
 
 -- Listener setup
 scene:addEventListener( "create", scene )

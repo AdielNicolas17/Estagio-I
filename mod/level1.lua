@@ -1,4 +1,4 @@
-
+audio.pause( musicTrack, { channel=1, loops=-1 } )
 -----------requisiçoes--------------------------------
 
 local composer = require( "composer" )
@@ -193,8 +193,43 @@ local function createBoss()
 
     lobo.enterFrame = moveInimigos
     Runtime:addEventListener("enterFrame", lobo)
-end
 
+    function morteLobo()
+        local  sheetOptions12 = {width =95 , height = 84, numFrames = 6}
+    
+        local morrer = graphics.newImageSheet("explosion1.png" , sheetOptions12)
+    
+        local sequences ={
+        {
+            name = "explosion",
+            start = 1,
+            count = 6,
+            time = 480,
+            loopCount = 1,
+        }
+        }
+        local mortol = display.newSprite(mainGroup, morrer , sequences)
+        physics.addBody(mortol ,"dynamic", {isSensor = true})
+        mortol.x = lobo.x
+        mortol.y = lobo.y
+        mortol.xScale = 0.8
+        mortol.yScale = 0.8
+        --mortol:toBack()
+        --morto.isVisible = false
+        mortol.myName ="mortol"
+    
+    
+        mortol.isVisible = true
+        mortol:play()
+
+        function limpaexp()
+            display.remove(mortol)
+        end
+        timer.performWithDelay(500 , limpaexp , -1)    
+        
+    end
+
+end
 
 criarLobo = timer.performWithDelay(3000 , createBoss , -10)
 
@@ -240,7 +275,7 @@ function morrer()
 	
 	morto.isVisible = true
 	morto:play()
-	timer.performWithDelay(3000, gameOver, 1)
+	timer.performWithDelay(3000, gameOver, -1)
 	
 	--running1.isVisible = false
 	--timer.performWithDelay(3000, gameOver, 1)
@@ -260,7 +295,9 @@ local function onCollision( event )
         if ( ( obj1.myName == "laser" and obj2.myName == "lobo" ) or
              ( obj1.myName == "lobo" and obj2.myName == "laser" ) )
         then
-        	
+            deathLobo = audio.loadStream( "audio/mlobo.wav" )
+            audio.play(deathLobo)
+            morteLobo()
             display.remove( obj1 )
             display.remove( obj2 )
             
@@ -279,7 +316,7 @@ local function onCollision( event )
                 if ( lives == 0 ) then
                     display.remove( running )
                     morrer()
-                    timer.performWithDelay( 200, endGame )
+                    timer.performWithDelay( 200, gameOver )
                 else
                     running.alpha = 0
                     timer.performWithDelay( 1000, restoreNinja )
@@ -309,7 +346,7 @@ local function endGame()
 	composer.gotoScene( "scores", { time=800, effect="crossFade" } )
 end
 function gameOver()
-   storyboard.gotoScene("menu", "fade", 400)
+    composer.gotoScene("menu")
 end
 
 

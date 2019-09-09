@@ -1,4 +1,6 @@
 audio.pause( musicTrack, { channel=1, loops=-1 } )
+musicPlay = audio.loadStream( "audio/ninjaplay.wav" )
+audio.play( musicPlay ,{ loops=-1})
 -----------requisiçoes--------------------------------
 
 local composer = require( "composer" )
@@ -41,7 +43,7 @@ background.fill={type = "image" , filename = "back11.png"}
 local function animateBackground()
 
         transition.to(background.fill ,{ time = 5000,x=1 ,delta = true, onComplete = animateBackground})
-
+        
 end
 animateBackground()
 

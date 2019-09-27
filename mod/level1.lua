@@ -1,6 +1,7 @@
 audio.pause( musicTrack, { channel=1, loops=-1 } )
+audio.reserveChannels( 3 )
 musicPlay = audio.loadStream( "audio/ninjaplay.wav" )
-audio.play( musicPlay ,{ loops=-1})
+audio.play( musicPlay ,{ channel=3, loops=-1})
 -----------requisiçoes--------------------------------
 
 local composer = require( "composer" )
@@ -17,7 +18,10 @@ local mainGroup = display.newGroup()
 local uiGroup = display.newGroup()
 
 -----------variaveis---------------------------------
-
+local tt
+local tt1
+local morto
+local morrer
 local base = 280
 local lives = 3
 local score = 0
@@ -79,7 +83,7 @@ function scene:create( event )
         }
     }
 
-    local running = display.newSprite(mainGroup,sheet , sequences)
+    running = display.newSprite(mainGroup,sheet , sequences)
     physics.addBody(running,"dynamic" , {radius=25})
     running.x = display.contentWidth - 400
     running.y = 200
@@ -115,6 +119,7 @@ function scene:create( event )
     local tt1 = display.newRect(250,500,250,500)
     tt1.x = 125
     tt1.y = 200
+    backGroup:insert(tt1)
     --tt.isVisible=false
     tt1:toBack()
     running:addEventListener( "touch", moveNinja )
@@ -138,6 +143,7 @@ function scene:create( event )
     local tt = display.newRect(250,500,250,500)
     tt.x = 360
     tt.y = 200
+    backGroup:insert(tt)
     --tt.isVisible=false
     tt:toBack()
     tt:addEventListener( "tap", fireLaser )
@@ -281,10 +287,11 @@ function scene:create( event )
         
         morto.isVisible = true
         morto:play()
-        timer.performWithDelay(3000, gameOver, -1)
+
+        timer.performWithDelay(3000, gameOuver )
         
         --running1.isVisible = false
-        --timer.performWithDelay(3000, gameOver, 1)
+        --timer.performWithDelay(3000, gameOuver, 1)
 
     end
 
@@ -322,7 +329,7 @@ function scene:create( event )
                     if ( lives == 0 ) then
                         display.remove( running )
                         morrer()
-                        timer.performWithDelay( 200, gameOver )
+                        timer.performWithDelay( 200, gameOuver )
                     else
                         running.alpha = 0
                         timer.performWithDelay( 1000, restoreNinja )
@@ -351,8 +358,8 @@ function scene:create( event )
         composer.setVariable( "finalScore", score )
         composer.gotoScene( "scores", { time=800, effect="crossFade" } )
     end
-    function gameOver()
-        composer.gotoScene("menu")
+    function gameOuver()
+        composer.gotoScene("gameover")
     end
 end
 ------------------- remove------------------------------------------------
@@ -372,12 +379,14 @@ function scene:hide( event )
 	local phase = event.phase
 	
 	if event.phase == "will" then
-       -- tt:removeEventListener('tap', fireLaser)
-       display.remove(uiGrupo)
-       display.remove(mainGroup)
-       display.remove(backGroup)
-	elseif phase == "did" then
-		composer.removeScene( "game" )
+              
+        display.remove(uiGroup)
+        display.remove(mainGroup)
+        display.remove(backGroup)
+        timer.cancel(criarLobo)
+    elseif phase == "did" then
+        audio.stop( 3 )
+		composer.removeScene( "level1" )
 	end	
 	
 end

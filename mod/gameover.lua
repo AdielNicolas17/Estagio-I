@@ -27,23 +27,21 @@ function scene:create( event )
 	local sceneGroup = self.view
 
 
-	local background = display.newImageRect( "gmeouver_text.png", display.actualContentWidth, display.actualContentHeight )
+	local background = display.newImageRect( "gmeouver_text.png", 200, 250 )
 	background.anchorX = 0
 	background.anchorY = 0
-	background.x = 0 + display.screenOriginX 
+	background.x = 120 + display.screenOriginX 
 	background.y = 0 + display.screenOriginY
 	
 
 	playBtn = widget.newButton{
-		label="Start",
-		--labelColor = { default={200}, over={128} },
-		default="start_text.png",
-		over="button-over.png",
+		label="Retry Again",
+		labelColor = { default={200}, over={128} },
 		width=50, height=30,
 		onRelease = onPlayBtnRelease	
 	}
 	playBtn.x = display.contentCenterX
-	playBtn.y = display.contentHeight - 68
+	playBtn.y = display.contentHeight - 30
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )

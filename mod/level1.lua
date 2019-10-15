@@ -56,12 +56,12 @@ function scene:create( event )
 
     -----------pontuação e vidas------------------------------
 
-    livesText = display.newText( uiGroup, "Lives: " .. lives, 200, 80, native.systemFont, 20 )
-    livesText.x = 50
-    livesText.y = 10
-    scoreText = display.newText( uiGroup, "Score: " .. score, 400, 80, native.systemFont, 20 )
-    scoreText.x = 150
-    scoreText.y = 10
+    livesText = display.newText( uiGroup, "Lives: " .. lives, 200, 80, native.newFont( "chiller"), 25 )
+    livesText.x = 45
+    livesText.y = 15
+    scoreText = display.newText( uiGroup, "Score: " .. score, 400, 80, native.newFont( "chiller"), 25  )
+    scoreText.x = 130
+    scoreText.y = 15
     local function updateText()
         livesText.text = "Lives: " .. lives
         scoreText.text = "Score: " .. score
@@ -172,7 +172,7 @@ function scene:create( event )
     local function createBoss()
         
         local  sheetOptions2 = {width =93.5 , height = 84, numFrames = 6}
-        local sheet1 = graphics.newImageSheet("lobo.png" , sheetOptions2)
+        local sheet1 = graphics.newImageSheet("pumba.png" , sheetOptions2)
 
         local sequences1 ={
         {
@@ -222,7 +222,7 @@ function scene:create( event )
             }
             local mortol = display.newSprite(mainGroup, morrer , sequences)
             physics.addBody(morrer,"dynamic" , {radius=30})
-            mortol.x = lobo.x - 5
+            mortol.x = lobo.x 
             mortol.y = lobo.y
             mortol.xScale = 0.8
             mortol.yScale = 1.2
@@ -243,8 +243,84 @@ function scene:create( event )
 
     end
 
-    criarLobo = timer.performWithDelay(3000 , createBoss , -10)
+    criarPumba = timer.performWithDelay(4000 , createBoss , -10)
 
+    --------------------------
+    local function createBoss()
+        
+        local  sheetOptions2 = {width =93.5 , height = 84, numFrames = 6}
+        local sheet1 = graphics.newImageSheet("lobo.png" , sheetOptions2)
+
+        local sequences1 ={
+        {
+            name = "normalRun",
+            start = 1,
+            count = 6,
+            time = 800,
+            loopCount = 0,
+            loopDirection = "forward"
+        }
+    }
+        local pumba = display.newSprite(mainGroup,sheet1 , sequences)
+        physics.addBody(pumba,"dynamic" , {radius=30})
+        pumba.speed = 1
+        pumba.x = display.contentWidth
+        pumba.y = math.random(120,250)
+        pumba.xScale = 0.8
+        pumba.yScale = 1.2
+        pumba:play()
+        pumba.myName ="pumba"    
+
+        local function moveInimigos()
+    --        print (lobo.x)
+        
+        if(pumba.x ~= nil)then
+            pumba.x = pumba.x - pumba.speed
+            end
+        end
+
+        pumba.enterFrame = moveInimigos
+        Runtime:addEventListener("enterFrame", pumba)
+
+        function morteLobo()
+            local  sheetOptions12 = {width =95.3 , height = 84, numFrames = 6}
+            
+            local morrer = graphics.newImageSheet("explosion1.png" , sheetOptions12)
+            
+            local sequences ={
+            {
+                name = "explosion",
+                start = 1,
+                count = 6,
+                time = 800,
+                loopCount = 1,
+                loopDirection = "forward"
+            }
+            }
+            local mortol = display.newSprite(mainGroup, morrer , sequences)
+            physics.addBody(morrer,"dynamic" , {radius=30})
+            mortol.x = pumba.x 
+            mortol.y = pumba.y
+            mortol.xScale = 0.8
+            mortol.yScale = 1.2
+            --mortol:toBack()
+            --morto.isVisible = false
+            mortol.myName ="mortol"
+        
+        
+            mortol.isVisible = true
+            mortol:play()
+
+            function limpaexp()
+                display.remove(mortol)
+            end
+            timer.performWithDelay(500 , limpaexp , -1)    
+            
+        end
+
+    end
+
+    criarLobo = timer.performWithDelay(10000 , createBoss , -1)
 
 
     ----------- Listener setup---------------------------------------
@@ -307,9 +383,19 @@ function scene:create( event )
             
             if ( ( obj1.myName == "laser" and obj2.myName == "lobo" ) or
                 ( obj1.myName == "lobo" and obj2.myName == "laser" ) )
+            
             then
-                deathLobo = audio.loadStream( "audio/mlobo.wav" )
-                audio.play(deathLobo)
+                --deathLobo = audio.loadStream( "audio/mlobo.wav" )
+                --audio.play(deathLobo)
+                morteLobo()
+                display.remove( obj1 )
+                display.remove( obj2 )
+            elseif ( ( obj1.myName == "laser" and obj2.myName == "pumba" ) or
+                ( obj1.myName == "pumba" and obj2.myName == "laser" ) )
+            
+            then
+                --deathLobo = audio.loadStream( "audio/mlobo.wav" )
+                --audio.play(deathLobo)
                 morteLobo()
                 display.remove( obj1 )
                 display.remove( obj2 )
@@ -356,10 +442,10 @@ function scene:create( event )
     --------------------------fim de jogo--------------------------
     local function endGame()
         composer.setVariable( "finalScore", score )
-        composer.gotoScene( "scores", { time=800, effect="crossFade" } )
+        composer.gotoScene( "scores", { time=1800, effect="crossFade" } )
     end
     function gameOuver()
-        composer.gotoScene("gameover")
+        composer.gotoScene("gameover" , { time=1800, effect="crossFade" })
     end
 end
 ------------------- remove------------------------------------------------
@@ -384,6 +470,7 @@ function scene:hide( event )
         display.remove(mainGroup)
         display.remove(backGroup)
         timer.cancel(criarLobo)
+        timer.cancel(criarPumba)
     elseif phase == "did" then
         audio.stop( 3 )
 		composer.removeScene( "level1" )

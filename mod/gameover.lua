@@ -1,4 +1,8 @@
+audio.pause( musicPlay ,{ channel=3, loops=-1})
 
+audio.reserveChannels( 5 )
+fim = audio.loadStream( "audio/fim.mp3" )
+audio.play( fim,{ channel=5, loops=-1})
 
 local composer = require( "composer" )
 local scene = composer.newScene()

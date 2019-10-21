@@ -455,7 +455,7 @@ function scene:show( event )
 	
 	if phase == "will" then
 	elseif phase == "did" then
-
+        audio.play( fim,{ channel=5, loops=-1})
 	end
 end
 

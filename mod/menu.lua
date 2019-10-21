@@ -9,7 +9,7 @@ local scene = composer.newScene()
 
 -- include Corona's "widget" library
 local widget = require "widget"
-
+buttonS = audio.loadStream( "audio/button1.wav" )
 --------------------------------------------
 
 -- forward declarations and other locals
@@ -17,7 +17,6 @@ local playBtn
 
 -- 'onRelease' event listener for playBtn
 local function onPlayBtnRelease()
-	
 	-- go to level1.lua scene
 	composer.gotoScene( "level1", "fade", 500 )
 	

@@ -11,7 +11,18 @@ local scene = composer.newScene()
 local widget = require "widget"
 
 --------------------------------------------
+display.setDefault("textureWrapX","mirroredRepeat")
 
+local backcloud = display.newRect( display.contentCenterX , display.contentCenterY , 480 , 320)
+backcloud.fill={type = "image" , filename = "cloud.png" }
+backcloud.alpha = 0.6
+local function animateCloud()
+
+		transition.to(backcloud.fill ,{ time = 8000,x=1 ,delta = true, onComplete = animateCloud})
+		
+end
+animateCloud()
+--------------------------------------------
 -- forward declarations and other locals
 local playBtn
 

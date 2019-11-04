@@ -36,7 +36,9 @@ function scene:create( event )
 	background.x = 0 + display.screenOriginX 
 	background.y = 0 + display.screenOriginY
 	
-
+	scoreText = display.newText(  "Tap to screen", 400, 80, native.newFont( "chiller"), 25  )
+    scoreText.x = display.contentCenterX
+    scoreText.y = display.contentCenterY - 50
 	playBtn = widget.newButton{
 		label="",
 		--labelColor = { default={200}, over={128} },
@@ -76,7 +78,7 @@ function scene:hide( event )
 	
 	if event.phase == "will" then
 		-- Called when the scene is on screen and is about to move off screen
-		--
+		display.remove(scoreText)
 		-- INSERT code here to pause the scene
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
 	elseif phase == "did" then

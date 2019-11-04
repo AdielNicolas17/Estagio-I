@@ -31,21 +31,23 @@ function scene:create( event )
 	local sceneGroup = self.view
 
 
-	local background = display.newImageRect( "gmeouver_text.png", 200, 250 )
-	background.anchorX = 0
-	background.anchorY = 0
-	background.x = 120 + display.screenOriginX 
-	background.y = 0 + display.screenOriginY
+	local background = display.newImageRect( "backg.png" , 480 , 320)
+	background.x = display.contentCenterX
+	background.y =  display.contentCenterY
+	--background.x = 120 + display.screenOriginX 
+	--background.y = 0 + display.screenOriginY
 	
-
+    scoreText = display.newText( "Try Again ", 400, 80, native.newFont( "chiller"), 25  )
+    scoreText.x = display.contentCenterX
+    scoreText.y = display.contentCenterY - 50
 	playBtn = widget.newButton{
-		label="Try Again",
+		label="",
 		labelColor = { default={200}, over={128} },
 		width=50, height=30,
 		onRelease = onPlayBtnRelease	
 	}
 	playBtn.x = display.contentCenterX
-	playBtn.y = display.contentHeight - 30
+	playBtn.y = display.contentCenterY - 50
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )

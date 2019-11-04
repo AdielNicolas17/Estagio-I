@@ -172,7 +172,7 @@ function scene:create( event )
     local function createBoss()
         
         local  sheetOptions2 = {width =93.5 , height = 84, numFrames = 6}
-        local sheet1 = graphics.newImageSheet("pumba.png" , sheetOptions2)
+        local sheet1 = graphics.newImageSheet("monster2.png" , sheetOptions2)
 
         local sequences1 ={
         {

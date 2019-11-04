@@ -38,11 +38,11 @@ function scene:create( event )
 	
 
 	playBtn = widget.newButton{
-		label="Start",
+		label="",
 		--labelColor = { default={200}, over={128} },
 		default="button.png",
 		over="button-over.png",
-		width=50, height=30,
+		width=320, height=480,
 		onRelease = onPlayBtnRelease	
 	}
 	playBtn.x = display.contentCenterX

@@ -39,7 +39,7 @@ function scene:create( event )
 	
 
 	playBtn = widget.newButton{
-		label="Retry Again",
+		label="Try Again",
 		labelColor = { default={200}, over={128} },
 		width=50, height=30,
 		onRelease = onPlayBtnRelease	

@@ -10,18 +10,11 @@ local scene = composer.newScene()
 -- include Corona's "widget" library
 local widget = require "widget"
 
+local backGroup = display.newGroup()  
+local mainGroup = display.newGroup()  
+local uiGroup = display.newGroup()
 --------------------------------------------
-display.setDefault("textureWrapX","mirroredRepeat")
 
-local backcloud = display.newRect( display.contentCenterX , display.contentCenterY , 480 , 320)
-backcloud.fill={type = "image" , filename = "cloud.png" }
-backcloud.alpha = 0.6
-local function animateCloud()
-
-		transition.to(backcloud.fill ,{ time = 8000,x=1 ,delta = true, onComplete = animateCloud})
-		
-end
-animateCloud()
 --------------------------------------------
 -- forward declarations and other locals
 local playBtn
@@ -39,10 +32,21 @@ local function gotoScores()
 end
 
 function scene:create( event )
+		display.setDefault("textureWrapX","mirroredRepeat")
+
+	local backcloud = display.newRect( backGroup ,display.contentCenterX , display.contentCenterY , 480 , 320)
+	backcloud.fill={type = "image" , filename = "cloud.png" }
+	backcloud.alpha = 0.6
+	local function animateCloud()
+
+			transition.to(backcloud.fill ,{ time = 8000,x=1 ,delta = true, onComplete = animateCloud})
+			
+	end
+	animateCloud()
 	local sceneGroup = self.view
 
 
-	local background = display.newImageRect( "backg.png" , 480 , 320)
+	local background = display.newImageRect( backGroup,"backg.png" , 480 , 320)
 	background.x = display.contentCenterX
 	background.y =  display.contentCenterY
 	--background.x = 120 + display.screenOriginX 
@@ -87,10 +91,9 @@ function scene:hide( event )
 	local phase = event.phase
 	
 	if event.phase == "will" then
-		-- Called when the scene is on screen and is about to move off screen
-		--
-		-- INSERT code here to pause the scene
-		-- e.g. stop timers, stop animation, unload sounds, etc.)
+		display.remove(uiGroup)
+        display.remove(mainGroup)
+        display.remove(backGroup)
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
 	end	

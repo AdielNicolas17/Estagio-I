@@ -320,7 +320,7 @@ function scene:create( event )
 
     end
 
-    criarLobo = timer.performWithDelay(10000 , createBoss , -1)
+    --criarLobo = timer.performWithDelay(10000 , createBoss , -1)
 
 
     ----------- Listener setup---------------------------------------
@@ -390,19 +390,8 @@ function scene:create( event )
                 morteLobo()
                 display.remove( obj1 )
                 display.remove( obj2 )
-            elseif ( ( obj1.myName == "laser" and obj2.myName == "pumba" ) or
-                ( obj1.myName == "pumba" and obj2.myName == "laser" ) )
-            
-            then
-                --deathLobo = audio.loadStream( "audio/mlobo.wav" )
-                --audio.play(deathLobo)
-                morteLobo()
-                display.remove( obj1 )
-                display.remove( obj2 )
-                
-
-
-                        score = score + 10
+  
+                score = score + 10
                 scoreText.text = "Score: " .. score
 
             elseif ( ( obj1.myName == "running" and obj2.myName == "lobo" ) or
@@ -469,7 +458,7 @@ function scene:hide( event )
         display.remove(uiGroup)
         display.remove(mainGroup)
         display.remove(backGroup)
-        timer.cancel(criarLobo)
+        --timer.cancel(criarLobo)
         timer.cancel(criarPumba)
     elseif phase == "did" then
         audio.stop( 3 )

@@ -53,7 +53,7 @@ end
 
 local function onPlayBtnRelease()
 	audio.stop( 2 )
-	
+	display.remove(playBtn)
 	display.remove(backGroup)
 	composer.gotoScene( "level1", "fade", 500 )
 	return true	

@@ -2,24 +2,58 @@ local composer = require( "composer" )
 composer.recycleOnSceneChange = true
 local scene = composer.newScene()
 
-
--- include Corona's "widget" library
 local widget = require "widget"
 
 local gameOverSound
+
+local playBtn
+local menuButton
+local boss
+local contadorChangeBoss = 0
 
 local backGroup = display.newGroup()  
 local mainGroup = display.newGroup()  
 local uiGroup = display.newGroup()
 --------------------------------------------
+local json = require( "json" )
 
+local scoresTable = {}
+
+local filePath = system.pathForFile( "scores.json", system.DocumentsDirectory )
+
+
+local function loadScores()
+
+	local file = io.open( filePath, "r" )
+
+	if file then
+		local contents = file:read( "*a" )
+		io.close( file )
+		scoresTable = json.decode( contents )
+	end
+
+	if ( scoresTable == nil or #scoresTable == 0 ) then
+		scoresTable = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+	end
+end
+local function saveScores()
+
+	for i = #scoresTable, 11, -1 do
+		table.remove( scoresTable, i )
+	end
+
+	local file = io.open( filePath, "w" )
+
+	if file then
+		file:write( json.encode( scoresTable ) )
+		io.close( file )
+	end
+end
 --------------------------------------------
--- forward declarations and other locals
-local playBtn
 
--- 'onRelease' event listener for playBtn
 local function onPlayBtnRelease()
 	audio.stop( 2 )
+	
 	display.remove(backGroup)
 	composer.gotoScene( "level1", "fade", 500 )
 	return true	
@@ -32,8 +66,32 @@ function scene:create( event )
 	gameOverSound = audio.loadSound( "audio/fim.mp3" )
 	audio.play( gameOverSound, { channel=2, loops=-1 })
 
-	display.setDefault("textureWrapX","mirroredRepeat")
 
+	table.insert( scoresTable, composer.getVariable( "finalScore" ) )
+	composer.setVariable( "finalScore", 0 ) 
+	
+	local function compare( a, b )
+        return a > b
+	end
+	
+    table.sort( scoresTable, compare )
+
+	saveScores()
+	
+    for i = 1, 10 do
+        if ( scoresTable[i] ) then
+            local yPos = 130 + ( i * 56 )
+
+            local rankNum = display.newText( uiGroup, i .. ")", display.contentCenterX, yPos, native.newFont( "chiller"), 25 )
+            rankNum:setFillColor( 0.8 )
+            rankNum.anchorX = 1
+
+            local thisScore = display.newText( uiGroup, scoresTable[i], display.contentCenterX, yPos, native.newFont( "chiller"), 25 )
+            thisScore.anchorX = 0
+        end
+	end
+
+	display.setDefault("textureWrapX","mirroredRepeat")
 	local backcloud = display.newRect( backGroup ,display.contentCenterX , display.contentCenterY , 480 , 320)
 	backcloud.fill={type = "image" , filename = "cloud.png" }
 	backcloud.alpha = 0.6
@@ -53,10 +111,11 @@ function scene:create( event )
 	background:toBack()
 	--background.x = 120 + display.screenOriginX 
 	--background.y = 0 + display.screenOriginY
-	
-    scoreText = display.newText( "Try Again ", 400, 80, native.newFont( "chiller"), 25  )
+
+	--------------try------------------------------------------------------------------------------------------------------	
+    scoreText = display.newText( backGroup,"Try Again ", 400, 80, native.newFont( "chiller"), 25  )
     scoreText.x = display.contentCenterX - 150
-    scoreText.y = display.contentCenterY - 150
+    scoreText.y = display.contentCenterY - 140
 	playBtn = widget.newButton{
 		label="",
 		labelColor = { default={200}, over={0} },
@@ -71,7 +130,8 @@ function scene:create( event )
 	sceneGroup:insert( background )
 	--sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
-	
+--------------try------------------------------------------------------------------------------------------------------	-----	
+
 end
 
 function scene:show( event )
@@ -100,7 +160,7 @@ function scene:hide( event )
         display.remove(mainGroup)
 		
 	elseif (phase == "did") then
-		-- Called when the scene is now off screen
+		composer.removeScene( "highscores" )
 	end	
 end
 

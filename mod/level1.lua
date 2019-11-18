@@ -389,12 +389,15 @@ function scene:create( event )
             then
                 --deathLobo = audio.loadStream( "audio/mlobo.wav" )
                 --audio.play(deathLobo)
+                contadorScore = 0
                 morteLobo()
+
                 display.remove( obj1 )
                 display.remove( obj2 )
   
                 score = score + 10
                 scoreText.text = "Score: " .. score
+                contadorScore = contadorScore+10
 
             elseif ( ( obj1.myName == "running" and obj2.myName == "lobo" ) or
                     ( obj1.myName == "lobo" and obj2.myName == "running" ) )
@@ -405,6 +408,7 @@ function scene:create( event )
                     livesText.text = "Lives: " .. lives
                     if ( lives == 0 ) then
                         display.remove( running )
+
                         morrer()
                         timer.performWithDelay( 200, game_Over )
                     else
@@ -420,12 +424,12 @@ function scene:create( event )
 
 
     -----------limites da tela de jogo------------------------
-    local limite = display.newImage("lm.png")
+    local limite = display.newImage(backGroup,"lm.png")
     limite.x = 230
     limite.y = -30
     physics.addBody(limite , "static",{density=.1, bounce=0.1, friction=.2})
 
-    local limite1 = display.newImage("lm.png")
+    local limite1 = display.newImage(backGroup,"lm.png")
     limite1.x = 230
     limite1.y = 320
     physics.addBody(limite1 , "static" ,{density=.1, bounce=0.1, friction=.2})
@@ -436,6 +440,7 @@ function scene:create( event )
         composer.gotoScene( "scores", { time=1800, effect="crossFade" } )
     end
     function game_Over()
+        display.remove(morto)
         composer.gotoScene( "gameover", "fade", 500 )
     end
 end

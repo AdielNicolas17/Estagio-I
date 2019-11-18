@@ -15,7 +15,10 @@ local uiGroup = display.newGroup()
 
 --------------------------------------------
 -- forward declarations and other locals
+
+
 local playBtn
+
 
 -- 'onRelease' event listener for playBtn
 local function onPlayBtnRelease()
@@ -25,9 +28,6 @@ local function onPlayBtnRelease()
 	return true	
 end
 
-local function gotoScores()
-	composer.gotoScene( "scores", { time=800, effect="crossFade" } )
-end
 
 function scene:create( event )
 	
@@ -57,7 +57,7 @@ function scene:create( event )
 	--background.x = 120 + display.screenOriginX 
 	--background.y = 0 + display.screenOriginY
 	
-    scoreText = display.newText( "Try Again ", 400, 80, native.newFont( "chiller"), 25  )
+    scoreText = display.newText( backGroup,"Try Again ", 400, 80, native.newFont( "chiller"), 25  )
     scoreText.x = display.contentCenterX
     scoreText.y = display.contentCenterY - 50
 	playBtn = widget.newButton{
@@ -74,7 +74,21 @@ function scene:create( event )
 	sceneGroup:insert( background )
 	--sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
-	
+-------------------------------------------------------------------------------------------------------------
+function gotoMenu()
+	--display.remove(menuButton)
+	audio.stop( 2 )
+	display.remove(menuButton)
+	display.remove(backGroup)
+	composer.gotoScene( "scores", "fade", 200 )
+end
+
+menuButton = display.newText( backGroup,"Rank", 400, 80, native.newFont( "chiller"), 25  )
+menuButton.x = display.contentCenterX
+menuButton.y = display.contentCenterY - 90
+
+   menuButton:addEventListener( "tap", gotoMenu )
+---------------------------------------------------------------------------------------------------------------	
 end
 
 function scene:show( event )
@@ -100,7 +114,7 @@ function scene:hide( event )
 	
 	if (event.phase == "will") then
 		display.remove(uiGroup)
-        display.remove(mainGroup)
+		display.remove(mainGroup)
 		
 	elseif (phase == "did") then
 		-- Called when the scene is now off screen
@@ -119,6 +133,7 @@ function scene:destroy( event )
 		playBtn:removeSelf()	-- widgets must be manually removed
 		playBtn = nil
 	end
+
 end
 
 ---------------------------------------------------------------------------------

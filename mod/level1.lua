@@ -39,6 +39,8 @@ local soundShot =  audio.loadStream( "audio/fire.wav" )
     
 
 function scene:create( event )
+    
+    
     local sceneGroup = self.view
 
     ------------background--------------------------------
@@ -364,10 +366,10 @@ function scene:create( event )
         morto.isVisible = true
         morto:play()
 
-        timer.performWithDelay(3000, gameOuver )
+        timer.performWithDelay(3000, game_Over )
         
         --running1.isVisible = false
-        --timer.performWithDelay(3000, gameOuver, 1)
+        --timer.performWithDelay(3000, game_Over, 1)
 
     end
 
@@ -404,7 +406,7 @@ function scene:create( event )
                     if ( lives == 0 ) then
                         display.remove( running )
                         morrer()
-                        timer.performWithDelay( 200, gameOuver )
+                        timer.performWithDelay( 200, game_Over )
                     else
                         running.alpha = 0
                         timer.performWithDelay( 1000, restoreNinja )
@@ -433,8 +435,8 @@ function scene:create( event )
         composer.setVariable( "finalScore", score )
         composer.gotoScene( "scores", { time=1800, effect="crossFade" } )
     end
-    function gameOuver()
-        composer.gotoScene("gameover" , { time=1800, effect="crossFade" })
+    function game_Over()
+        composer.gotoScene( "gameover", "fade", 500 )
     end
 end
 ------------------- remove------------------------------------------------
@@ -444,7 +446,7 @@ function scene:show( event )
 	
 	if phase == "will" then
 	elseif phase == "did" then
-        audio.play( fim,{ channel=5, loops=-1})
+      
 	end
 end
 

@@ -47,6 +47,7 @@ function scene:create( event )
 		width=320, height=480,
 		onRelease = onPlayBtnRelease	
 	}
+	playBtn.alpha = 0.008
 	playBtn.x = display.contentCenterX
 	playBtn.y = display.contentHeight - 68
 	

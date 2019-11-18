@@ -1,162 +1,132 @@
+local composer = require( "composer" )
+composer.recycleOnSceneChange = true
 local scene = composer.newScene()
 
--- -----------------------------------------------------------------------------------
--- Code outside of the scene event functions below will only be executed ONCE unless
--- the scene is removed entirely (not recycled) via "composer.removeScene()"
--- -----------------------------------------------------------------------------------
 
--- Initialize variables
-local json = require( "json" )
+-- include Corona's "widget" library
+local widget = require "widget"
 
-local scoresTable = {}
+local gameOverSound
 
-local filePath = system.pathForFile( "scores.json", system.DocumentsDirectory )
+local backGroup = display.newGroup()  
+local mainGroup = display.newGroup()  
+local uiGroup = display.newGroup()
+--------------------------------------------
 
-local musicTrack
+--------------------------------------------
+-- forward declarations and other locals
+local playBtn
 
-
-local function loadScores()
-
-	local file = io.open( filePath, "r" )
-
-	if file then
-		local contents = file:read( "*a" )
-		io.close( file )
-		scoresTable = json.decode( contents )
-	end
-
-	if ( scoresTable == nil or #scoresTable == 0 ) then
-		scoresTable = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-	end
+-- 'onRelease' event listener for playBtn
+local function onPlayBtnRelease()
+	audio.stop( 2 )
+	display.remove(backGroup)
+	composer.gotoScene( "level1", "fade", 500 )
+	return true	
 end
 
 
-local function saveScores()
-
-	for i = #scoresTable, 11, -1 do
-		table.remove( scoresTable, i )
-	end
-
-	local file = io.open( filePath, "w" )
-
-	if file then
-		file:write( json.encode( scoresTable ) )
-		io.close( file )
-	end
-end
-
-
-local function gotoMenu()
-	composer.gotoScene( "menu", { time=800, effect="crossFade" } )
-end
-
-
--- -----------------------------------------------------------------------------------
--- Scene event functions
--- -----------------------------------------------------------------------------------
-
--- create()
 function scene:create( event )
+	
+	audio.reserveChannels( 2 )
+	gameOverSound = audio.loadSound( "audio/fim.mp3" )
+	audio.play( gameOverSound, { channel=2, loops=-1 })
 
-	local sceneGroup = self.view
-	-- Code here runs when the scene is first created but has not yet appeared on screen
+	display.setDefault("textureWrapX","mirroredRepeat")
 
-	-- Load the previous scores
-	loadScores()
+	local backcloud = display.newRect( backGroup ,display.contentCenterX , display.contentCenterY , 480 , 320)
+	backcloud.fill={type = "image" , filename = "cloud.png" }
+	backcloud.alpha = 0.6
+	local function animateCloud()
 
-	-- Insert the saved score from the last game into the table
-	table.insert( scoresTable, composer.getVariable( "finalScore" ) )
-	composer.setVariable( "finalScore", 0 )
-
-	-- Sort the table entries from highest to lowest
-	local function compare( a, b )
-		return a > b
+			transition.to(backcloud.fill ,{ time = 8000,x=1 ,delta = true, onComplete = animateCloud})
+			
 	end
-	table.sort( scoresTable, compare )
+	backGroup:insert(mainGroup)
+	animateCloud()
+	local sceneGroup = self.view
 
-	-- Save the scores
-	saveScores()
 
-	local background = display.newImageRect( sceneGroup, "background.png", 800, 1400 )
+	local background = display.newImageRect( backGroup,"backg.png" , 480 , 320)
 	background.x = display.contentCenterX
-	background.y = display.contentCenterY
-
-	local highScoresHeader = display.newText( sceneGroup, "High Scores", display.contentCenterX, 100, native.systemFont, 44 )
-
-	for i = 1, 10 do
-		if ( scoresTable[i] ) then
-			local yPos = 150 + ( i * 56 )
-
-			local rankNum = display.newText( sceneGroup, i .. ")", display.contentCenterX-50, yPos, native.systemFont, 36 )
-			rankNum:setFillColor( 0.8 )
-			rankNum.anchorX = 1
-
-			local thisScore = display.newText( sceneGroup, scoresTable[i], display.contentCenterX-30, yPos, native.systemFont, 36 )
-			thisScore.anchorX = 0
-		end
-	end
-
-	local menuButton = display.newText( sceneGroup, "Menu", display.contentCenterX, 810, native.systemFont, 44 )
-	menuButton:setFillColor( 0.75, 0.78, 1 )
-	menuButton:addEventListener( "tap", gotoMenu )
-
-	musicTrack = audio.loadStream( "audio/Midnight-Crawlers_Looping.wav" )
+	background.y =  display.contentCenterY
+	background:toBack()
+	--background.x = 120 + display.screenOriginX 
+	--background.y = 0 + display.screenOriginY
+	
+    scoreText = display.newText( "Try Again ", 400, 80, native.newFont( "chiller"), 25  )
+    scoreText.x = display.contentCenterX - 150
+    scoreText.y = display.contentCenterY - 150
+	playBtn = widget.newButton{
+		label="",
+		labelColor = { default={200}, over={0} },
+		width=50, height=30,
+		onRelease = onPlayBtnRelease	
+	}
+	playBtn.alpha = 0.008
+	playBtn.x = display.contentCenterX - 150
+	playBtn.y = display.contentCenterY - 150
+	
+	-- all display objects must be inserted into group
+	sceneGroup:insert( background )
+	--sceneGroup:insert( titleLogo )
+	sceneGroup:insert( playBtn )
+	
 end
 
-
--- show()
 function scene:show( event )
-
 	local sceneGroup = self.view
 	local phase = event.phase
+	
+	if phase == "will" then
+		-- Called when the scene is still off screen and is about to move on screen
 
-	if ( phase == "will" ) then
-		-- Code here runs when the scene is still off screen (but is about to come on screen)
-
-	elseif ( phase == "did" ) then
-		-- Code here runs when the scene is entirely on screen
-		-- Start the music!
-		audio.play( musicTrack, { channel=1, loops=-1 } )
-	end
+	elseif phase == "did" then
+		-- Called when the scene is now on screen
+		-- 
+		-- INSERT code here to make the scene come alive
+		-- e.g. start timers, begin animation, play audio, etc.
+		--audio.play( musicTrack, { channel=1, loops=-1 } )
+	
+	end	
 end
 
-
--- hide()
 function scene:hide( event )
-
 	local sceneGroup = self.view
 	local phase = event.phase
+	
+	if (event.phase == "will") then
+		display.remove(uiGroup)
+        display.remove(mainGroup)
+		
+	elseif (phase == "did") then
+		-- Called when the scene is now off screen
+	end	
+end
 
-	if ( phase == "will" ) then
-		-- Code here runs when the scene is on screen (but is about to go off screen)
-
-	elseif ( phase == "did" ) then
-		-- Code here runs immediately after the scene goes entirely off screen
-		-- Stop the music!
-		audio.stop( 1 )
-		composer.removeScene( "highscores" )
+function scene:destroy( event )
+	local sceneGroup = self.view
+	
+	-- Called prior to the removal of scene's "view" (sceneGroup)
+	-- 
+	-- INSERT code here to cleanup the scene
+	-- e.g. remove display objects, remove touch listeners, save state, etc.
+	
+	if playBtn then
+		playBtn:removeSelf()	-- widgets must be manually removed
+		playBtn = nil
 	end
 end
 
-
--- destroy()
-function scene:destroy( event )
-
-	local sceneGroup = self.view
-	-- Code here runs prior to the removal of scene's view
-	-- Dispose audio!
-	audio.dispose( musicTrack )
-end
+---------------------------------------------------------------------------------
 
 
--- -----------------------------------------------------------------------------------
--- Scene event function listeners
--- -----------------------------------------------------------------------------------
+-- Listener setup
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
--- -----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------
 
 return scene
- 

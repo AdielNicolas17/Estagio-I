@@ -1,14 +1,12 @@
-audio.pause( musicPlay ,{ channel=3, loops=-1})
-
-audio.reserveChannels( 5 )
-fim = audio.loadStream( "audio/fim.mp3" )
-audio.play( fim,{ channel=5, loops=-1})
-
 local composer = require( "composer" )
+composer.recycleOnSceneChange = true
 local scene = composer.newScene()
+
 
 -- include Corona's "widget" library
 local widget = require "widget"
+
+local gameOverSound
 
 local backGroup = display.newGroup()  
 local mainGroup = display.newGroup()  
@@ -21,18 +19,23 @@ local playBtn
 
 -- 'onRelease' event listener for playBtn
 local function onPlayBtnRelease()
-	
-	-- go to level1.lua scene
+	audio.stop( 2 )
+	display.remove(backGroup)
 	composer.gotoScene( "level1", "fade", 500 )
-	
-	return true	-- indicates successful touch
+	return true	
 end
+
 local function gotoScores()
 	composer.gotoScene( "scores", { time=800, effect="crossFade" } )
 end
 
 function scene:create( event )
-		display.setDefault("textureWrapX","mirroredRepeat")
+	
+	audio.reserveChannels( 2 )
+	gameOverSound = audio.loadSound( "audio/fim.mp3" )
+	audio.play( gameOverSound, { channel=2, loops=-1 })
+
+	display.setDefault("textureWrapX","mirroredRepeat")
 
 	local backcloud = display.newRect( backGroup ,display.contentCenterX , display.contentCenterY , 480 , 320)
 	backcloud.fill={type = "image" , filename = "cloud.png" }
@@ -42,6 +45,7 @@ function scene:create( event )
 			transition.to(backcloud.fill ,{ time = 8000,x=1 ,delta = true, onComplete = animateCloud})
 			
 	end
+	backGroup:insert(mainGroup)
 	animateCloud()
 	local sceneGroup = self.view
 
@@ -49,6 +53,7 @@ function scene:create( event )
 	local background = display.newImageRect( backGroup,"backg.png" , 480 , 320)
 	background.x = display.contentCenterX
 	background.y =  display.contentCenterY
+	background:toBack()
 	--background.x = 120 + display.screenOriginX 
 	--background.y = 0 + display.screenOriginY
 	
@@ -57,10 +62,11 @@ function scene:create( event )
     scoreText.y = display.contentCenterY - 50
 	playBtn = widget.newButton{
 		label="",
-		labelColor = { default={200}, over={128} },
+		labelColor = { default={200}, over={0} },
 		width=50, height=30,
 		onRelease = onPlayBtnRelease	
 	}
+	playBtn.alpha = 0.008
 	playBtn.x = display.contentCenterX
 	playBtn.y = display.contentCenterY - 50
 	
@@ -68,7 +74,7 @@ function scene:create( event )
 	sceneGroup:insert( background )
 	--sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
-	musicTrack = audio.loadStream( "audio/start.mp3" )
+	
 end
 
 function scene:show( event )
@@ -77,12 +83,14 @@ function scene:show( event )
 	
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
+
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
-		audio.play( musicTrack, { channel=1, loops=-1 } )
+		--audio.play( musicTrack, { channel=1, loops=-1 } )
+	
 	end	
 end
 
@@ -90,11 +98,11 @@ function scene:hide( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	
-	if event.phase == "will" then
+	if (event.phase == "will") then
 		display.remove(uiGroup)
         display.remove(mainGroup)
-        display.remove(backGroup)
-	elseif phase == "did" then
+		
+	elseif (phase == "did") then
 		-- Called when the scene is now off screen
 	end	
 end
